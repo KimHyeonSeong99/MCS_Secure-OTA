@@ -29,7 +29,7 @@ def mqtt_client(broker_address: str, port=1883, keepalive=60):
 def get_update_file(update_file_name):
     # 서버의 URL
     try:
-        url = f"http://210.123.37.95:5000/get_update?update_file_name={update_file_name}"
+        url = f"http://{write server ip or domain}/get_update?update_file_name={update_file_name}"
 
         # HTTPS 요청 보내기
         response = requests.get(url, verify=False)  # 스트리밍 모드로 요청
