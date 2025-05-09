@@ -9,9 +9,12 @@ vehicle_id = "vehicle_1234"  # 차량 ID
 
 def on_message(client, userdata, msg):
     try:
-        file_name = msg.payload.decode()
+        file_name = msg.payload.decode()["update_file_name"]
         print(f"Update notice received: {file_name}")
-        get_update_file(file_name)
+        server_ip = msg.payload.decode()["server_ip"]
+        print(f"Server IP received: {server_ip}")
+        # 서버 IP를 사용하여 업데이트 파일을 다운로드
+        get_update_file(file_name, server_ip)
     except Exception as e:
         print(f"Error processing message: {e}")
 
@@ -21,15 +24,15 @@ def mqtt_client(broker_address: str, port=1883, keepalive=60):
         client.on_message = on_message
         client.username_pw_set("mose", "3103")
         client.connect(broker_address, port, keepalive)
-        client.subscribe("ota/updates")
+        client.subscribe("updates")
         client.loop_forever()
     except Exception as e:
         print(f"Error connecting to MQTT broker: {e}")
 
-def get_update_file(update_file_name):
+def get_update_file(update_file_name,server_ip):
     # 서버의 URL
     try:
-        url = f"http://write server ip or domain/get_update?update_file_name={update_file_name}"
+        url = f"http://{server_ip}/get_update?update_file_name={update_file_name}"
 
         # HTTPS 요청 보내기
         response = requests.get(url, verify=False)  # 스트리밍 모드로 요청

@@ -14,22 +14,7 @@ app.config['UPLOAD_FOLDER'] = FIRMWARE_DIR
 os.makedirs(FIRMWARE_DIR, exist_ok=True)
 os.makedirs(OTA_DIR, exist_ok=True)
 
-@app.route('/')
-def login_page():
-    return render_template('login.html')
-
-@app.route('/login', methods=['POST'])
-def login():
-    username = request.form.get('username')
-    password = request.form.get('password')
-    if username == 'admin' and password == '1234':
-        # Redirect to the upload page after successful login
-        return redirect(url_for('upload_page'))
-    else:
-        # Reload the login page with an error message
-        return render_template('login.html', error="Invalid username or password")
-
-@app.route('/upload', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def upload_page():
     if request.method == 'GET':
         return render_template('upload.html')
@@ -43,9 +28,9 @@ def upload_page():
             # Save the file to the 'firmwares' directory
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
             file.save(file_path)
-            return render_template('login.html', success=f"File '{file.filename}' uploaded successfully")
+            return render_template('upload.html', success=f"File '{file.filename}' uploaded successfully")
         except Exception as e:
-            return render_template('login.html', error=f"Failed to save file: {str(e)}")
+            return render_template('upload.html', error=f"Failed to save file: {str(e)}")
 
 @app.route("/get_update", methods=["GET"])
 def get_update():
