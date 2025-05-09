@@ -5,6 +5,7 @@ import os
 import zipfile  # 추가된 모듈
 import io
 import socket  # 추가된 모듈
+import json  # 추가된 모듈
 
 app = Flask(__name__, template_folder='templates')  # Correct folder name
 
@@ -46,9 +47,15 @@ def upload_page():
         try:
             client.connect("203.246.114.61", 12010)
             client.loop_start()
-            json_data = {"update_file_name": file.filename, "server_ip": socket.gethostbyname(socket.gethostname())}
-            client.publish("updates", json_data, qos=2, retain=True)
+            
+            # Dynamically retrieve the server's IP address
+            server_ip = f"{socket.gethostbyname(socket.gethostname())}:5000"
+            json_data = {"update_file_name": file.filename, "server_ip": server_ip}
+            
+            # Serialize the JSON data properly
+            client.publish("updates", json.dumps(json_data).encode(), qos=2, retain=True)
             print(f"Update notice sent: {json_data}")
+            
             client.loop_stop()
             client.disconnect()
             # Save the file to the 'firmwares' directory
