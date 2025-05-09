@@ -37,7 +37,7 @@ def monitor_directory():
                 client.publish("ota/updates", file.encode(), qos = 2, retain=True)
                 print(f"New OTA file available: {file}")
                 seen_files.update(new_files)  # Update seen files
-                #save_notified_files(seen_files)  # Save updated list
+                save_notified_files(seen_files)  # Save updated list
                 time.sleep(10)
             client.loop_stop()
             client.disconnect()
