@@ -1,4 +1,4 @@
-# Malware Distribution via a Spoofed OTA Server 
+# Malware Injection into Vehicle via DNS Spoofing and Fake OTA Server Attack
 
 ## 1. Scenario Overview and Initial Requirements
 
