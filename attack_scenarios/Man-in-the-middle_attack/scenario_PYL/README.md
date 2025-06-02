@@ -1,57 +1,59 @@
-# OTA MITM Attack Simulation
+# Scenario Name: MITM Attack via Proxy Redirection on Insecure OTA Update System
 
-This project simulates a Man-In-The-Middle (MITM) attack on an insecure OTA (Over-The-Air) update system. The attacker intercepts and redirects OTA requests, delivering a malicious update file instead of the legitimate one.
+This project simulates a Man-In-The-Middle (MITM) attack on an insecure OTA (Over-The-Air) update system.
+
+The attacker intercepts and redirects OTA requests, delivering a malicious update file instead of the legitimate one.
+
+## 1. Scenario Overview and Initial Requirements
+
+### 1.1 Scenario Overview
+
+This scenario demonstrates how an attacker can impersonate a legitimate OTA update server by compromising a proxy.
+
+The attacker intercepts the vehicle’s request, redirects the OTA traffic to a malicious server, and distributes a tampered firmware update.
+
+### 1.2 Basic Requirements
+
+- **Proxy Environment**: A proxy server under attacker control
+- **Tools Used**: Python 3, Flask, local domain redirection (`hosts` file)
+- **Simulation Devices**: One attacker machine and one simulated vehicle
+- **OTA Security Status**: No TLS, no file integrity checks, and no authentication
 
 ## Assumptions
 
-- The attacker has already compromised the proxy server.
-- The vehicle’s communication module makes OTA requests using domain names (e.g., `ota.com`).
-- The proxy server, under the attacker's control, can inspect and modify traffic.
-- The OTA server lacks authentication, integrity checks, and encryption.
-- The vehicle does not verify signatures or hashes on received files.
+- The attacker has already taken control of the proxy.
+- The vehicle requests firmware from a domain-based URL (e.g., `http://ota.com`)
+- The OTA server does not enforce certificate validation or digital signatures
+- The vehicle blindly installs updates without verifying their origin
 
----
+# **2. Hands-on Procedure**
 
-## Attack Scenario (Attacker’s Perspective)
+## Step 1: Firmware Update Uploaded to OTA Server (Baseline Assumption)
 
-### Step 1: Firmware Update Uploaded to OTA Server (Baseline Assumption)
-- The legitimate OTA server hosts a new firmware file.
-- It is published at a downloadable URL.
-- A notice is sent out that an update is available.
+- A valid firmware file is uploaded to the official OTA server by the manufacturer.
+- This update is published at a specific URL (e.g., `http://ota.com/ota`) and made publicly available.
+- The vehicle or driver is notified (via push message or app) that a new OTA update is ready to install.
 
-### Step 2: Vehicle Makes OTA Request
-- The vehicle's communication module sends an OTA request to `http://ota.com`.
-- To fetch the file, it needs to resolve the domain to an IP.
-- The attacker intercepts the IP resolution response and replaces it with the attacker’s server IP.
-- From the vehicle’s perspective, `ota.com` now points to the attacker-controlled server.
+## Step 2: Vehicle Makes OTA Request
 
-### Step 3: Attacker Hosts a Fake OTA Server
-- The attacker operates a malicious OTA server that mimics the real one.
-- The fake server responds with a crafted `fake_ota_update.bin`.
-- The file mimics the format of the real update (headers, version, etc.) but contains malicious code.
-- Optionally, the attacker recomputes the hash and signature fields to match the file content.
-- Alternatively, the attacker may deliver an old vulnerable version (rollback attack).
+- The vehicle sends an OTA request to [http://ota.com](http://ota.com/) and resolves the domain name to an IP address.
+- The attacker intercepts this resolution and redirects the request to their own server by spoofing the IP.
 
-### Step 4: Vehicle Downloads Malicious OTA File
-- The vehicle downloads the file, assuming it’s legitimate.
-- If integrity verification is skipped or bypassed, the malicious update is accepted.
-- The update is passed to the ECU, which applies it without further verification.
-- The attacker gains the ability to remotely control or disrupt the vehicle.
+## Step 3: Attacker Hosts a Fake OTA Server
 
----
+- The attacker sets up a fake OTA server that imitates the real one and serves a crafted `fake_ota_update.bin`.
+- The file appears legitimate in format (e.g., headers, version) but includes malicious code.
+- To avoid detection, the attacker may adjust the hash/signature or serve an outdated vulnerable version instead.
 
-## Additional Attack Variants
+## Step 4: Vehicle Downloads Malicious OTA File
 
-- **Rollback attack**: Serving outdated vulnerable firmware.
-- **Hash collision attack**: Reusing the same hash in the OTA package.
-- **Fake version metadata**: Tricking version checks by spoofing metadata.
-- **Signed-but-malicious file**: When code signing is not enforced.
+- The vehicle downloads the OTA file, assuming it’s genuine
+- Without proper integrity checks, the malicious update is accepted and applied to the ECU.
+- This allows the attacker to gain remote control or cause disruption to the vehicle.
 
----
+# **Step-by-Step Simulation**
 
-## Step-by-Step Simulation
-
-### Step 1: Create a Fake OTA Server
+## **Step 1: Create a Fake OTA Server**
 
 ```python
 # fake_ota_server.py
@@ -68,13 +70,16 @@ if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000)
 ```
 
-#### Explanation
+**Explanation**
 
 - A simple Flask server listens on port 8000.
 - When /ota is accessed, it returns the fake binary file.
 - The .bin file imitates a real OTA update.
 
-### Step 2: Simulate the Vehicle's Communication Module
+![image](https://github.com/user-attachments/assets/adda3f2a-9f58-46a7-8b27-34544d66fa44)
+
+
+## **Step 2: Simulate the Vehicle's Communication Module**
 
 ```python
 # vehicle_module.py
@@ -95,31 +100,49 @@ else:
     print("[Vehicle] Failed to download OTA file. Status code:", response.status_code)
 ```
 
-#### Explanation
+**Explanation**
 
-- Sends an HTTP GET request to `http://ota.com:8000/ota`.
-- If successful, saves the file as `downloaded_ota.bin`.
+- Sends an HTTP GET request to `http://ota.com:8000/ota`.
+- If successful, saves the file as `downloaded_ota.bin`.
 - Simulates a vehicle blindly trusting the update file.
 
-## Configuration (for local testing)
-### 1. Modify `hosts` file on your machine (Windows only)
-To redirect `ota.com` to your local attacker server:
+## **Configuration (for local testing)**
+
+**1. Modify `hosts` file on your machine (Windows only)**
+
+To redirect `ota.com` to your local attacker server:
+
 1. Run Notepad as Administrator
-2. Open: `C:\Windows\System32\drivers\etc\hosts`
+2. Open: `C:\Windows\System32\drivers\etc\hosts`
 3. Add the following line:
-```
+
+```python
 127.0.0.1 ota.com
 ```
-4. Save and close
 
-## Disclaimer
-This simulation is for educational and research purposes only. Never use these techniques against real vehicles or systems. Always get permission before performing security testing.
+1. Save and close
 
-## File Structure
-```graphql
-.
-├── fake_ota_server.py        # Fake OTA server (attacker)
-├── vehicle_module.py         # Simulated vehicle requesting the OTA file
-├── fake_ota_update.bin       # Malicious binary (crafted by attacker)
-└── README.md                 # This file
-```
+![image](https://github.com/user-attachments/assets/a62f4bf1-0204-484b-8964-520d1fc68e54)
+
+
+### Security Validation Elements
+
+1. **Domain Name Validation**
+    
+    → Ensure OTA clients verify that the resolved IP truly belongs to the trusted server using DNSSEC or certificate pinning.
+    
+2. **TLS & Certificate Verification**
+    
+    → Enforce HTTPS communication and check server certificates to prevent MITM or downgrade attacks.
+    
+3. **Firmware Signature Verification**
+    
+    → The vehicle must check the digital signature of firmware before installation.
+    
+4. **Integrity Check with Cryptographic Hash**
+    
+    → Validate file integrity with SHA-256 or similar hash algorithms to detect tampering.
+    
+5. **Update Metadata Verification**
+    
+    → Compare version, timestamp, and publisher info against trusted values.
