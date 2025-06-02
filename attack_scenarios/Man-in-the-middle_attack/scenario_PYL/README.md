@@ -26,34 +26,34 @@ The attacker intercepts the vehicle’s request, redirects the OTA traffic to a 
 - The OTA server does not enforce certificate validation or digital signatures
 - The vehicle blindly installs updates without verifying their origin
 
-# **2. Hands-on Procedure**
+## **2. Hands-on Procedure**
 
-## Step 1: Firmware Update Uploaded to OTA Server (Baseline Assumption)
+### Step 1: Firmware Update Uploaded to OTA Server (Baseline Assumption)
 
 - A valid firmware file is uploaded to the official OTA server by the manufacturer.
 - This update is published at a specific URL (e.g., `http://ota.com/ota`) and made publicly available.
 - The vehicle or driver is notified (via push message or app) that a new OTA update is ready to install.
 
-## Step 2: Vehicle Makes OTA Request
+### Step 2: Vehicle Makes OTA Request
 
 - The vehicle sends an OTA request to [http://ota.com](http://ota.com/) and resolves the domain name to an IP address.
 - The attacker intercepts this resolution and redirects the request to their own server by spoofing the IP.
 
-## Step 3: Attacker Hosts a Fake OTA Server
+### Step 3: Attacker Hosts a Fake OTA Server
 
 - The attacker sets up a fake OTA server that imitates the real one and serves a crafted `fake_ota_update.bin`.
 - The file appears legitimate in format (e.g., headers, version) but includes malicious code.
 - To avoid detection, the attacker may adjust the hash/signature or serve an outdated vulnerable version instead.
 
-## Step 4: Vehicle Downloads Malicious OTA File
+### Step 4: Vehicle Downloads Malicious OTA File
 
 - The vehicle downloads the OTA file, assuming it’s genuine
 - Without proper integrity checks, the malicious update is accepted and applied to the ECU.
 - This allows the attacker to gain remote control or cause disruption to the vehicle.
 
-# **Step-by-Step Simulation**
+## **3. Step-by-Step Simulation**
 
-## **Step 1: Create a Fake OTA Server**
+### **Step 1: Create a Fake OTA Server**
 
 ```python
 # fake_ota_server.py
@@ -79,7 +79,7 @@ if __name__ == "__main__":
 ![image](https://github.com/user-attachments/assets/adda3f2a-9f58-46a7-8b27-34544d66fa44)
 
 
-## **Step 2: Simulate the Vehicle's Communication Module**
+### **Step 2: Simulate the Vehicle's Communication Module**
 
 ```python
 # vehicle_module.py
@@ -125,7 +125,7 @@ To redirect `ota.com` to your local attacker server:
 ![image](https://github.com/user-attachments/assets/a62f4bf1-0204-484b-8964-520d1fc68e54)
 
 
-### Security Validation Elements
+## 4. Security Guideline
 
 1. **Domain Name Validation**
     
