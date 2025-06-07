@@ -375,43 +375,43 @@ ls -l
 
 ## Security Guidelines: Mitigating DNS Spoofing-Based OTA Malware Injection
 
-### 1. Overview
-- OTA (Over-the-Air) update systems are essential for delivering firmware and software updates to connected vehicles.
-- Insecure OTA environments are vulnerable to attacks such as DNS spoofing and fake OTA servers.
-- This guideline outlines essential security measures to protect vehicles from malicious OTA injections.
+### 1. Key Recommendations
 
----
+- **Domain Name Validation**  
+  → Apply DNSSEC or validate DNS responses to prevent spoofing  
+  → Block hosts file manipulation and local DNS overrides
 
-### 2. Threat Model
+- **Certificate Pinning**  
+  → Embed trusted server certificates (public key fingerprints) into clients  
+  → Reject connections to spoofed/self-signed certificates
 
-- **Attack Vectors**
-  - DNS Spoofing: Redirects requests for a legitimate OTA domain to a malicious server
-  - MITM (Man-in-the-Middle): Intercepts OTA traffic and injects tampered content
-  - Fake OTA Server: Serves malware disguised as legitimate firmware
+- **TLS Enforcement**  
+  → Enforce HTTPS-only communication for all OTA traffic  
+  → Disallow insecure options like `verify=False`
 
-- **Attacker Capabilities**
-  - Access to the same local network or control of DNS/proxy configurations
-  - Ability to deploy self-signed certificates to mimic trusted servers
+- **Firmware Integrity Check**  
+  → Use SHA-256 or equivalent hash to ensure firmware integrity  
+  → Abort update if hash mismatch is detected
 
-- **Attack Goals**
-  - Install malicious firmware on the vehicle's ECU
-  - Downgrade or backdoor the system with outdated or vulnerable versions
-  - Violate the system's integrity and gain unauthorized control
+- **Signature Verification**  
+  → Verify digital signatures using the manufacturer's public key only  
+  → Block updates signed with unknown or attacker-provided keys
 
----
+- **Update Metadata Validation**  
+  → Check version number, release date, and vendor ID  
+  → Prevent rollback attacks with outdated firmware
 
-### 3. Key Security Guidelines
+- **Secure Boot**  
+  → Enable signature verification at boot to block unauthorized firmware execution
 
-| Security Element | Description |
-|------------------|-------------|
-| **Domain Name Verification** | Enforce DNSSEC or validate the integrity of DNS responses. Block hosts file or local DNS manipulation. |
-| **Certificate Pinning** | Embed and verify known server certificates (public key fingerprints) in the client. Prevent acceptance of spoofed or self-signed certs. |
-| **TLS Enforcement** | All OTA traffic must use HTTPS. Block HTTP and disable insecure options like `verify=False`. |
-| **Firmware Integrity Check** | Use SHA-256 hashes to validate downloaded firmware. Abort installation if integrity verification fails. |
-| **Signature Verification** | Verify firmware using only the official manufacturer's public key. Reject updates signed with unknown keys. |
-| **Update Metadata Validation** | Check version number, release date, and vendor ID. Prevent rollback attacks with outdated firmware. |
-| **Secure Boot** | Ensure firmware signatures are verified at boot time to block unauthorized binaries. |
-| **Rollback Protection** | Implement version-locking mechanisms (e.g., eFuse) to prevent firmware downgrades. |
-| **Client Authentication** | Require vehicles to authenticate themselves (e.g., with ID or key-based challenge) before requesting OTA updates. |
-| **Logging & IDS Integration** | Collect OTA logs and integrate with intrusion detection systems (IDS) to detect anomalies. |
+- **Rollback Protection**  
+  → Implement version locking (e.g., eFuse) to deny downgrade attempts
+
+- **Client Authentication**  
+  → Require vehicles to authenticate using unique ID or cryptographic keys before OTA requests
+
+- **Logging & IDS Integration**  
+  → Collect logs of OTA activity  
+  → Integrate with IDS (Intrusion Detection Systems) to detect anomalies
+
 
