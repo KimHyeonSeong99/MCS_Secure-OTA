@@ -373,7 +373,7 @@ ls -l
 - We crafted a malicious OTA update package.
 - We successfully tricked the client into installing it.
 
-## 🔐 Security Guidelines: Mitigating DNS Spoofing-Based OTA Malware Injection
+## Security Guidelines: Mitigating DNS Spoofing-Based OTA Malware Injection
 
 ### 1. Overview
 - OTA (Over-the-Air) update systems are essential for delivering firmware and software updates to connected vehicles.
