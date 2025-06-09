@@ -68,20 +68,3 @@ def send_fake_file():
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000)
 ```
-### 4. Description of the entire scenario flow
-
-Normal case
-
-Vehicle → Real OTA server
-(Normal file download)
-
-Hacking case (MITM)
-
-Vehicle → (Domain request) [ota.com](http://ota.com/)
-
-↓
-Hacker manipulates file
-
-↓
-Vehicle → Connected to hacker server
-(Fake OTA file download)
