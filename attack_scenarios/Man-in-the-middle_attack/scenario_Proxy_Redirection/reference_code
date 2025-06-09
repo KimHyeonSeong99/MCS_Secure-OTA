@@ -12,11 +12,10 @@ attack_scenarios/
 
 ### 1. Basic Concept Explanation**
 
-This code is a "practice that shows a situation where a hacker secretly sends a fake file (MITM attack) when a car updates its software via the Internet."
+This code demonstrates a simple simulation of a Man-in-the-Middle (MITM) attack during a car's OTA update process.
 
 - MITM is a "Man-in-the-Middle" attack. A hacker intercepts communication in the middle.
-- If a car receives an update without security, a hacker can send a bad file to manipulate or damage the car..
-
+- If a car receives an update without security, a hacker can send a malicious file to take control of or damage the vehicle.
 ### 2. Execution environment and preparation
 
 Requirements
@@ -24,7 +23,7 @@ Requirements
 - Install Python 3
 - Install the Flask library
 ```shell
-Flask install (Type in the command prompt or terminal):
+#Install Flask by typing the following command in your terminal:
 
 pip install flask
 ```
@@ -38,23 +37,28 @@ pip install flask
 - How to run:
 fake_ota_server.py
 ```python
-from flask import Flask, send_file
+import requests
 
-app = Flask(__name__)
+url = "http://ota.com:8000/ota"
 
-@app.route("/ota")
-def send_fake_file():
-     return send_file("fake_ota_update.bin", as_attachment=True)
+print("[Vehicle] Sending OTA update request...")
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000)
+response = requests.get(url)
+
+if response.status_code == 200:
+    with open("downloaded_ota.bin", "wb") as f:
+        f.write(response.content)
+    print("[Vehicle] OTA file received! Saved as downloaded_ota.bin")
+else:
+    print("[Vehicle] Failed to download OTA file. Status code:", response.status_code)
+
 ```
 
 `vehicle_module.py`
 
-- 역할: 자동차 역할을 하는 코드
-- 하는 일: 업데이트를 받기 위해 `http://ota.com:8000/ota`에 요청하고, 받은 파일을 저장한다.
-- 실행 방법:
+- Role: Code that acts as a car
+- What it does: Requests `http://ota.com:8000/ota` to get updates, and saves the received files.
+- How to run:
 vehicle_module.py
 ```python
 from flask import Flask, send_file
