@@ -1,1 +1,87 @@
+attack_scenarios/
+└── Man-in-the-middle_attack/
+    └── scenario_Proxy_Redirection/
+        ├── README.md         # scenario description
+        ├── images/           # Diagrams, explanatory pictures
+        └── reference_code/   # Folder dedicated to reference code
+            ├── server/
+            │   ├── fake_ota_server.py
+            │   └── fake_ota_update.bin
+            └── client/
+                └── vehicle_module.py
 
+### **1. Basic Concept Explanation**
+
+This code is a "practice that shows a situation where a hacker secretly sends a fake file (MITM attack) when a car updates its software via the Internet."
+
+- MITM is a "Man-in-the-Middle" attack. A hacker intercepts communication in the middle.
+- If a car receives an update without security, a hacker can send a bad file to manipulate or damage the car..
+
+### 2. Execution environment and preparation
+
+Requirements
+
+- Install Python 3
+- Install the Flask library
+```shell
+Flask install (Type in the command prompt or terminal):
+
+pip install flask
+```
+
+### 3. Code description by file
+
+`fake_ota_server.py`
+
+- Role: Fake OTA server created by hacker
+- What it does: When someone accesses `/ota`, it sends a fake update file (`fake_ota_update.bin`).
+- How to run:
+fake_ota_server.py
+```python
+from flask import Flask, send_file
+
+app = Flask(__name__)
+
+@app.route("/ota")
+def send_fake_file():
+     return send_file("fake_ota_update.bin", as_attachment=True)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8000)
+```
+
+`vehicle_module.py`
+
+- 역할: 자동차 역할을 하는 코드
+- 하는 일: 업데이트를 받기 위해 `http://ota.com:8000/ota`에 요청하고, 받은 파일을 저장한다.
+- 실행 방법:
+vehicle_module.py
+```python
+from flask import Flask, send_file
+
+app = Flask(__name__)
+
+@app.route("/ota")
+def send_fake_file():
+     return send_file("fake_ota_update.bin", as_attachment=True)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8000)
+```
+### 4. Description of the entire scenario flow
+
+Normal case
+
+Vehicle → Real OTA server
+(Normal file download)
+
+Hacking case (MITM)
+
+Vehicle → (Domain request) [ota.com](http://ota.com/)
+
+↓
+Hacker manipulates file
+
+↓
+Vehicle → Connected to hacker server
+(Fake OTA file download)
