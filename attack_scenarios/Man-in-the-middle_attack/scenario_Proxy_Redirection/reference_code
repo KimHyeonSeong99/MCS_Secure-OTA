@@ -10,7 +10,7 @@ attack_scenarios/
             └── client/
                 └── vehicle_module.py
 
-### **1. Basic Concept Explanation**
+### 1. Basic Concept Explanation**
 
 This code is a "practice that shows a situation where a hacker secretly sends a fake file (MITM attack) when a car updates its software via the Internet."
 
