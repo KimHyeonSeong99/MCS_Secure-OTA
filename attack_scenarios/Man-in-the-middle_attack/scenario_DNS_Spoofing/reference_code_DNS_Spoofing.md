@@ -29,13 +29,15 @@ reference_code_DNS_Spoofing/
 
 ## 1. certs
 
-### 1.1 ota.crt
+### 1.1 generate ota.crt
 ~~~
+#generate ota.crt wirte in your linux bash
 openssl req -x509 -newkey rsa:2048 -keyout ota.key -out ota.crt -days 365 -nodes
 ~~~
 
-### 1.2 client.key
+### 1.2 generate client.key
 ~~~
+#generate ota.crt wirte in your linux bash
 openssl genrsa -out client.key 2048
 ~~~
 
@@ -111,13 +113,15 @@ except Exception as e:
 
 ## 1. certs
 
-### 1.1 ota.crt
+### 1.1 generate ota.crt
 ~~~
+#generate ota.crt wirte in your linux bash
 openssl req -x509 -newkey rsa:2048 -keyout ota.key -out ota.crt -days 365 -nodes
 ~~~
 
-### 1.2 attacker.key
+### 1.2 generate attacker.key
 ~~~
+#generate ota.crt wirte in your linux bash
 openssl genrsa -out attacker.key 2048
 ~~~
 
@@ -145,28 +149,33 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=443, ssl_context=(cert_path, key_path))
 ~~~
 
-## 3. attacker.pub
+## 3. generate attacker.pub
 ~~~
+#generate ota.crt wirte in your linux bash
 openssl rsa -in attacker.key -pubout -out attacker.pub
 ~~~
 
-## 4. firmware.bin
+## 4. generate firmware.bin
 ~~~
+#generate ota.crt wirte in your linux bash
 echo "Malicious firmware simulation file - This is an attacker-controlled update!" > firmware.bin
 ~~~
 
-## 5. firmware.hash
+## 5. generate firmware.hash
 ~~~
+#generate ota.crt wirte in your linux bash
 sha256sum firmware.bin > firmware.hash
 ~~~
 
-## 6. firmware.sig
+## 6. generate firmware.sig
 ~~~
+#generate ota.crt wirte in your linux bash
 openssl dgst -sha256 -sign attacker.key -out firmware.sig firmware.bin
 ~~~
 
 ## 7. client_simulator.py
 ~~~
+#generate ota.crt wirte in your linux bash
 cp ~/flask_ota_lab/ota_client/client_simulator.py ~/flask_ota_lab/attacker/client_simulator.py
 cp ~/flask_ota_lab/updates/attacker.pub ~/flask_ota_lab/attacker/
 ~~~
@@ -175,19 +184,22 @@ cp ~/flask_ota_lab/updates/attacker.pub ~/flask_ota_lab/attacker/
 
 ## 1. certs
 
-### 1.1 ota.crt
+### 1.1 generate ota.crt
 ~~~
+#generate ota.crt wirte in your linux bash
 openssl req -x509 -newkey rsa:2048 -keyout server.key -out ota.crt -days 365 -nodes
 # Common Name (e.g. server FQDN or YOUR name) []: ota.realserver.com
 ~~~
 
-### 1.2 server.key
+### 1.2 generate server.key
 ~~~
+#generate ota.crt wirte in your linux bash
 openssl genrsa -out server.key 2048
 ~~~
 
-## 2. firmware.bin
+## 2. generate firmware.bin
 ~~~
+#generate ota.crt wirte in your linux bash
 echo "Legitimate firmware update file" > firmware.bin
 ~~~
 
