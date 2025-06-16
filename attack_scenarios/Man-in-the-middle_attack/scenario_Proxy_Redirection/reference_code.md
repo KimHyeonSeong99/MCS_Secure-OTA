@@ -41,7 +41,7 @@ fake_ota_server.py
 ```python
 import requests
 
-url = "http://ota.com:8000/ota"
+url = "http://127.0.0.1:8000/ota"
 
 print("[Vehicle] Sending OTA update request...")
 
@@ -59,7 +59,7 @@ else:
 `vehicle_module.py`
 
 - Role: Code that acts as a car
-- What it does: Requests `http://ota.com:8000/ota` to get updates, and saves the received files.
+- What it does: Requests `http://127.0.0.1:8000/ota` to get updates, and saves the received files.
 - How to run:
 vehicle_module.py
 ```python
