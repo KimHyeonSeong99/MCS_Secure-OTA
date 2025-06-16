@@ -1,16 +1,18 @@
+```
 attack_scenarios/
 └── Man-in-the-middle_attack/
     └── scenario_Proxy_Redirection/
-        ├── README.md         # scenario description
-        ├── images/           # Diagrams, explanatory pictures
-        └── reference_code/   # Folder dedicated to reference code
+        ├── README.md         # Scenario Description
+        └── reference_code/   # Where to save your practice code
             ├── server/
-            │   ├── fake_ota_server.py
-            │   └── fake_ota_update.bin
+            │   ├── fake_ota_server.py     # Malicious OTA server built with Flask
+            │   └── fake_ota_update.bin    # Malicious file to be sent to the vehicle (randomly created)
             └── client/
-                └── vehicle_module.py
+                └── vehicle_module.py      # Code for the vehicle to request OTA and save the file
 
-### 1. Basic Concept Explanation**
+```
+
+### 1. Basic Concept Explanation
 
 This code demonstrates a simple simulation of a Man-in-the-Middle (MITM) attack during a car's OTA update process.
 
@@ -39,7 +41,7 @@ fake_ota_server.py
 ```python
 import requests
 
-url = "http://ota.com:8000/ota"
+url = "http://127.0.0.1:8000/ota"
 
 print("[Vehicle] Sending OTA update request...")
 
@@ -57,7 +59,7 @@ else:
 `vehicle_module.py`
 
 - Role: Code that acts as a car
-- What it does: Requests `http://ota.com:8000/ota` to get updates, and saves the received files.
+- What it does: Requests `http://127.0.0.1:8000/ota` to get updates, and saves the received files.
 - How to run:
 vehicle_module.py
 ```python

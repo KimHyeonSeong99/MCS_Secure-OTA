@@ -31,7 +31,7 @@ The attacker intercepts the vehicle’s request, redirects the OTA traffic to a 
 ## Step 1: Firmware Update Uploaded to OTA Server (Baseline Assumption)
 
 - A valid firmware file is uploaded to the official OTA server by the manufacturer.
-- This update is published at a specific URL (e.g., `http://ota.com/ota`) and made publicly available.
+- This update is published at a specific URL (e.g., `http://127.0.0.1/ota`) and made publicly available.
 - The vehicle or driver is notified (via push message or app) that a new OTA update is ready to install.
 
 ## Step 2: Vehicle Makes OTA Request
@@ -76,17 +76,20 @@ if __name__ == "__main__":
 - When /ota is accessed, it returns the fake binary file.
 - The .bin file imitates a real OTA update.
 
-![image](https://github.com/user-attachments/assets/adda3f2a-9f58-46a7-8b27-34544d66fa44)
+![image](https://github.com/user-attachments/assets/fe2a6b20-aa1f-4bf8-8a7b-5cf1bceacfc7)
+
 
 
 ## **Step 2: Simulate the Vehicle's Communication Module**
+
+Open notepad in windows and create `fake_ota_update.bin` file. At this time, create it in the same path as `fake_OTA_sever.py` and `vehicle_module.py` and save it as `.bin` file.
 
 ```python
 # vehicle_module.py
 
 import requests
 
-url = "http://ota.com:8000/ota"
+url = "http://127.0.0.1:8000/ota"
 
 print("[Vehicle] Sending OTA update request...")
 
@@ -102,27 +105,12 @@ else:
 
 **Explanation**
 
-- Sends an HTTP GET request to `http://ota.com:8000/ota`.
+- Sends an HTTP GET request to `http://127.0.0.1:8000/ota`.
 - If successful, saves the file as `downloaded_ota.bin`.
 - Simulates a vehicle blindly trusting the update file.
 
-## **Configuration (for local testing)**
+![image](https://github.com/user-attachments/assets/c71944f9-ee3a-44f8-b330-4e164ea9168c)
 
-**1. Modify `hosts` file on your machine (Windows only)**
-
-To redirect `ota.com` to your local attacker server:
-
-1. Run Notepad as Administrator
-2. Open: `C:\Windows\System32\drivers\etc\hosts`
-3. Add the following line:
-
-```python
-127.0.0.1 ota.com
-```
-
-1. Save and close
-
-![image](https://github.com/user-attachments/assets/a62f4bf1-0204-484b-8964-520d1fc68e54)
 
 
 ### Security Validation Elements
