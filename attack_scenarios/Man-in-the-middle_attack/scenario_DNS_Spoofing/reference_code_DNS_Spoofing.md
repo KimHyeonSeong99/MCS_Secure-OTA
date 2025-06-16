@@ -1,3 +1,6 @@
+# Folder Structure
+
+```
 reference_code_DNS_Spoofing/
 ├── ota_client/ #OTA target vehicle
 |   ├── certs/
@@ -21,3 +24,6 @@ reference_code_DNS_Spoofing/
 |   ├── firmware.bin 
 |   └── app.py
 └── README.md
+```
+
+### 1. certs
