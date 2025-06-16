@@ -82,6 +82,8 @@ if __name__ == "__main__":
 
 ## **Step 2: Simulate the Vehicle's Communication Module**
 
+Open notepad in windows and create `fake_ota_update.bin` file. At this time, create it in the same path as `fake_OTA_sever.py` and `vehicle_module.py` and save it as `.bin` file.
+
 ```python
 # vehicle_module.py
 
