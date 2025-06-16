@@ -1,0 +1,1 @@
+echo "Malicious firmware simulation file" > firmware.bin

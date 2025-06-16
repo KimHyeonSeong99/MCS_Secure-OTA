@@ -1,0 +1,1 @@
+openssl req -x509 -newkey rsa:2048 -keyout ota.key -out ota.crt -days 365 -nodes
