@@ -31,7 +31,7 @@ The attacker intercepts the vehicle’s request, redirects the OTA traffic to a 
 ## Step 1: Firmware Update Uploaded to OTA Server (Baseline Assumption)
 
 - A valid firmware file is uploaded to the official OTA server by the manufacturer.
-- This update is published at a specific URL (e.g., `http://ota.com/ota`) and made publicly available.
+- This update is published at a specific URL (e.g., `http://127.0.0.1/ota`) and made publicly available.
 - The vehicle or driver is notified (via push message or app) that a new OTA update is ready to install.
 
 ## Step 2: Vehicle Makes OTA Request
